@@ -36,12 +36,31 @@
 # Music path
 MUSIC_PATH=~/Music
 
+# m1 program path
+M1_PATH=~/Sources/m1_078a6/m1-x64
+
 # Config directory
 CMP_CONFIG_PATH=~/.chiptune-meta-player
 
 #############
 # Functions #
 #############
+
+# Info level logging
+infoEcho() {
+    echo "[INFO] $@"
+}
+
+# Warning level logging on stderr
+warning() {
+    echo "[WARN] $@" 1>&2
+}
+
+# Error level logging on stderr and exit
+fatalError() {
+    echo "[ERROR] $@" 1>&2
+    exit 1
+}
 
 # Create files ".<FMT>" with the list of all file paths of the
 # provided formats.
@@ -52,9 +71,53 @@ update() {
     done
 }
 
-# Create file ".<FMT>" with the list of all file paths of that format
+# Create file ".<FMT>" with the list of all file paths of that
+# format. The format m1 is treated seperatly.
 update_fmt() {
-    find $MUSIC_PATH -name "*.$1" > $CMP_CONFIG_PATH/".$1"
+    if [[ "$1" == m1 ]]; then
+        $M1_PATH -ll > $CMP_CONFIG_PATH/".$1"
+    else
+        find $MUSIC_PATH -name "*.$1" > $CMP_CONFIG_PATH/".$1"
+    fi
+}
+
+# Randomly select the format for the song to play
+select_fmt() {
+    # TODO: If no format is specified choose between the existing
+    # knows ones
+    local fmts=("$@")
+    local fmt_index=$((RANDOM % $#))
+    local fmt=${fmts[$fmt_index]}
+    echo $fmt
+}
+
+# Return command line to play the given format
+fmt2cmd() {
+    local fmt="$1"
+    case "$fmt" in
+        "m1")
+            echo "\"$M1_PATH\" -m0 -n -v5"
+            ;;
+        "mod" | "xm")
+            echo "xmp -l"
+            ;;
+        *)
+            fatalError "Format $fmt is not supported"
+            ;;
+    esac
+}
+
+# Random select a song of the given format
+select_song() {
+    local fmt="$1"
+    local songs="$CMP_CONFIG_PATH/.$fmt"
+    case "$fmt" in
+        "m1")
+            echo "$(shuf < "$songs" | head -n1 | cut -d: -f1)"
+            ;;
+        *)
+            "$(shuf < "$songs" | head -n1)"
+    esac
 }
 
 ########
@@ -70,5 +133,13 @@ if [[ "$1" == update ]]; then
     shift
 fi
 
-# Get the chiptune formats
-# TODO
+# Pick up the chiptune format
+fmt="$(select_fmt $@)"
+
+# Pick up the song to play
+song="$(select_song "$fmt")"
+
+# Build the command line and play the song
+cmd="$(fmt2cmd "$fmt") \"$song\""
+echo "$cmd"
+eval "$cmd"
