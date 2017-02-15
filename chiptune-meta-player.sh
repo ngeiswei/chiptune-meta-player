@@ -7,7 +7,8 @@
 # chiptune-meta-player.sh [update] [FMT-1] ... [FMT-n]
 #
 # where FMT-1 to FMT-n are the chiptune formats you would like to
-# play.
+# play, or update if the optional update command is used. If no format
+# are indicated then all supported formats are considered.
 #
 # How does it work?
 #
@@ -29,6 +30,8 @@
 # For now supported formats are sid, mod, as well as all supported
 # formats by xmp, and m1 for MAME.
 
+# set -x
+
 ############
 # Contants #
 ############
@@ -41,6 +44,9 @@ M1_PATH=~/Sources/m1_078a6/m1-x64
 
 # Config directory
 CMP_CONFIG_PATH=~/.chiptune-meta-player
+
+# List of suported formats
+SUPPORTED_FMTS=(m1 mod sid)
 
 #############
 # Functions #
@@ -65,6 +71,7 @@ fatalError() {
 # Create files ".<FMT>" with the list of all file paths of the
 # provided formats.
 update() {
+    infoEcho "update"
     while [[ $# > 0 ]]; do
         update_fmt "$1"
         shift
@@ -74,21 +81,32 @@ update() {
 # Create file ".<FMT>" with the list of all file paths of that
 # format. The format m1 is treated seperatly.
 update_fmt() {
-    if [[ "$1" == m1 ]]; then
-        $M1_PATH -ll > $CMP_CONFIG_PATH/".$1"
+    local fmt="$1"
+    infoEcho "search chiptunes in $MUSIC_PATH with format $fmt"
+    if [[ "$fmt" == m1 ]]; then
+        "$M1_PATH" -ll > $CMP_CONFIG_PATH/"$fmt"
     else
-        find $MUSIC_PATH -name "*.$1" > $CMP_CONFIG_PATH/".$1"
+        find $MUSIC_PATH -name "*.$fmt" > $CMP_CONFIG_PATH/"$fmt"
     fi
+}
+
+get_existing_fmts() {
+    local res=($(find "$CMP_CONFIG_PATH" -name "*" -exec basename {} \;))
+    unset res[0]
+    echo ${res[@]}
 }
 
 # Randomly select the format for the song to play
 select_fmt() {
-    # TODO: If no format is specified choose between the existing
-    # knows ones
-    local fmts=("$@")
-    local fmt_index=$((RANDOM % $#))
-    local fmt=${fmts[$fmt_index]}
-    echo $fmt
+    if [[ $# > 0 ]]; then
+        local fmts=("$@")
+    else
+        # If no format is specified choose between the existing known
+        # ones
+        local fmts=($(get_existing_fmts))
+    fi
+    local fmt_index=$((RANDOM % ${#fmts}))
+    echo ${fmts[$fmt_index]}
 }
 
 # Return command line to play the given format
@@ -97,6 +115,9 @@ fmt2cmd() {
     case "$fmt" in
         "m1")
             echo "\"$M1_PATH\" -m0 -n -v5"
+            ;;
+        "sid")
+            echo sidplay2
             ;;
         "mod" | "xm")
             echo "xmp -l"
@@ -110,13 +131,13 @@ fmt2cmd() {
 # Random select a song of the given format
 select_song() {
     local fmt="$1"
-    local songs="$CMP_CONFIG_PATH/.$fmt"
+    local songs="$CMP_CONFIG_PATH/$fmt"
     case "$fmt" in
         "m1")
             echo "$(shuf < "$songs" | head -n1 | cut -d: -f1)"
             ;;
         *)
-            "$(shuf < "$songs" | head -n1)"
+            echo "$(shuf < "$songs" | head -n1)"
     esac
 }
 
@@ -127,17 +148,24 @@ select_song() {
 # Create config path
 mkdir $CMP_CONFIG_PATH &> /dev/null
 
-# Update
-if [[ "$1" == update ]]; then
-    update
+# First time or user update
+if [[ -z $(get_existing_fmts) && "$1" == update ]]; then
     shift
+    if [[ $# == 0 ]]; then
+        update ${SUPPORTED_FMTS[@]}
+    else
+        update $@
+    fi
+    exit 0
 fi
 
 # Pick up the chiptune format
 fmt="$(select_fmt $@)"
+infoEcho "Select $fmt format"
 
 # Pick up the song to play
 song="$(select_song "$fmt")"
+infoEcho "Select $song"
 
 # Build the command line and play the song
 cmd="$(fmt2cmd "$fmt") \"$song\""
