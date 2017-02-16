@@ -40,7 +40,10 @@
 MUSIC_PATH=~/Music
 
 # m1 program path
-M1_PATH=~/Sources/m1_078a6/m1-x64
+M1_PATH=~/Sources/m1_078a6
+M1_PRG_PATH="$M1_PATH/m1-x64"
+M1_XML_PATH="$M1_PATH//m1.xml"
+M1_INI_PATH="$M1_PATH//m1.ini"
 
 # Config directory
 CMP_CONFIG_PATH=~/.chiptune-meta-player
@@ -84,7 +87,7 @@ update_fmt() {
     local fmt="$1"
     infoEcho "search chiptunes in $MUSIC_PATH with format $fmt"
     if [[ "$fmt" == m1 ]]; then
-        "$M1_PATH" -ll > $CMP_CONFIG_PATH/"$fmt"
+        "$M1_PRG_PATH" -ll > $CMP_CONFIG_PATH/"$fmt"
     else
         find $MUSIC_PATH -name "*.$fmt" > $CMP_CONFIG_PATH/"$fmt"
     fi
@@ -114,7 +117,7 @@ fmt2cmd() {
     local fmt="$1"
     case "$fmt" in
         "m1")
-            echo "\"$M1_PATH\" -m0 -n -v5"
+            echo "\"$M1_PRG_PATH\" -m0 -n -v5"
             ;;
         "sid")
             echo sidplay2
@@ -148,8 +151,13 @@ select_song() {
 # Create config path
 mkdir $CMP_CONFIG_PATH &> /dev/null
 
+# Copy m1 xml file to current directory, otherwise m1 doesn't work, I
+# don't know why.
+cp $M1_XML_PATH .
+cp $M1_INI_PATH .
+
 # First time or user update
-if [[ -z $(get_existing_fmts) && "$1" == update ]]; then
+if [[ -z $(get_existing_fmts) || "$1" == update ]]; then
     shift
     if [[ $# == 0 ]]; then
         update ${SUPPORTED_FMTS[@]}
@@ -169,5 +177,5 @@ infoEcho "Select $song"
 
 # Build the command line and play the song
 cmd="$(fmt2cmd "$fmt") \"$song\""
-echo "$cmd"
+infoEcho "$cmd"
 eval "$cmd"
