@@ -102,13 +102,13 @@ get_existing_fmts() {
 # Randomly select the format for the song to play
 select_fmt() {
     if [[ $# > 0 ]]; then
-        local fmts=("$@")
+        local fmts=($@)
     else
         # If no format is specified choose between the existing known
         # ones
         local fmts=($(get_existing_fmts))
     fi
-    local fmt_index=$((RANDOM % ${#fmts}))
+    local fmt_index=$((RANDOM % ${#fmts[@]}))
     echo ${fmts[$fmt_index]}
 }
 
