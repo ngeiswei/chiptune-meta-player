@@ -49,7 +49,7 @@ M1_INI_PATH="$M1_PATH//m1.ini"
 CMP_CONFIG_PATH=~/.chiptune-meta-player
 
 # List of suported formats
-SUPPORTED_FMTS=(m1 mod sid)
+SUPPORTED_FMTS=(m1 mod sid ahx)
 
 #############
 # Functions #
@@ -124,6 +124,9 @@ fmt2cmd() {
             ;;
         "mod" | "xm")
             echo "xmp -l"
+            ;;
+        "ahx")
+            echo "uade123 --repeat"
             ;;
         *)
             fatalError "Format $fmt is not supported"
