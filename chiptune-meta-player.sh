@@ -27,14 +27,18 @@
 # ones and then randomly select a chiptune in that format, and play
 # that chiptune in loop.
 #
-# For now supported formats are sid, mod, as well as all supported
-# formats by xmp, and m1 for MAME.
+# Supported formats are sid, mod, sc68, m1 for MAME, and countless
+# others. See the variables with suffix FMTS for the full list.
 
 # set -x
 
 ############
 # Contants #
 ############
+
+# Program path
+PRG_PATH="$(readlink -f "$0")"
+PRG_DIR="$(dirname "$PRG_PATH")"
 
 # Music path
 MUSIC_PATH=~/Music
@@ -53,6 +57,7 @@ M1_FMTS=(m1)
 SIDPLAY2_FMTS=() #sid) need to fix shit for sidmon that is also called sid
 XMP_FMTS=(mod xm it stm s3m mtm imf ptm ult liq psm amf gdm rtm mgt far 669 fnk ntp)
 UADE_FMTS=(amc ast amm aon ahx bss cm dz dl dw cus dm dp digi dmu ems tf fred gray smod gmc hip hip7 hipc ims is is20 jmf jam kh lme mc mso md ma mmd0 mmd1 mmd2 mmd3 mmdc okta dat ps snk pvp pap pt puma emod riff rh dum rho scumm scn scr mok sc psf sfx st26 jd sas ss sb sun syn synmod thm sg wb ymst)
+SC68_FMTS=(sc68 sndh)
 
 #############
 # Functions #
@@ -126,6 +131,8 @@ fmt2cmd() {
         echo "xmp -l"
     elif [[ -n ${UADE_FMTS[@]} && ${UADE_FMTS[@]} =~ $fmt ]]; then
         echo "uade123 --repeat"
+    elif [[ -n ${SC68_FMTS[@]} && ${SC68_FMTS[@]} =~ $fmt ]]; then
+        echo "$PRG_DIR/sc68.sh"
     else
         fatalError "Format $fmt is not supported"
     fi
@@ -160,7 +167,7 @@ cp $M1_INI_PATH . &> /dev/null
 if [[ -z $(get_existing_fmts) || "$1" == update ]]; then
     shift
     if [[ $# == 0 ]]; then
-        update ${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]}
+        update ${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]}
     else
         update $@
     fi
