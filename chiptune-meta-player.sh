@@ -42,14 +42,17 @@ MUSIC_PATH=~/Music
 # m1 program path
 M1_PATH=~/Sources/m1_078a6
 M1_PRG_PATH="$M1_PATH/m1-x64"
-M1_XML_PATH="$M1_PATH//m1.xml"
-M1_INI_PATH="$M1_PATH//m1.ini"
+M1_XML_PATH="$M1_PATH/m1.xml"
+M1_INI_PATH="$M1_PATH/m1.ini"
 
 # Config directory
 CMP_CONFIG_PATH=~/.chiptune-meta-player
 
 # List of suported formats
-SUPPORTED_FMTS=(m1 mod sid ahx)
+M1_FMTS=() #m1)
+SIDPLAY2_FMTS=() #sid) need to fix shit for sidmon that is also called sid
+XMP_FMTS=(mod)
+UADE_FMTS=(amc ast amm aon ahx bss cm dz dl dw cus dm dp digi dmu ems tf fred gray smod gmc hip hip7 hipc ims is is20 jmf jam kh lme mc mso md ma mmd0 mmd1 mmd2 mmd3 mmdc okta dat ps snk pvp pap pt puma emod riff rh dum rho scumm scn scr mok sc psf sfx st26 jd sas ss sb sun syn synmod thm sg wb ymst)
 
 #############
 # Functions #
@@ -115,23 +118,17 @@ select_fmt() {
 # Return command line to play the given format
 fmt2cmd() {
     local fmt="$1"
-    case "$fmt" in
-        "m1")
-            echo "\"$M1_PRG_PATH\" -m0 -n -v5"
-            ;;
-        "sid")
-            echo sidplay2
-            ;;
-        "mod" | "xm")
-            echo "xmp -l"
-            ;;
-        "ahx")
-            echo "uade123 --repeat"
-            ;;
-        *)
-            fatalError "Format $fmt is not supported"
-            ;;
-    esac
+    if [[ -n ${M1_FMTS[@]} && ${M1_FMTS[@]} =~ $fmt ]]; then
+        echo "\"$M1_PRG_PATH\" -m0 -n -v5"
+    elif [[ -n ${SIDPLAY2_FMTS[@]} && ${SIDPLAY_FMTS[@]} =~ $fmt ]]; then
+        echo sidplay2
+    elif [[ -n ${XMP_FMTS[@]} && ${XMP_FMTS[@]} =~ $fmt ]]; then
+        echo "xmp -l"
+    elif [[ -n ${UADE_FMTS[@]} && ${UADE_FMTS[@]} =~ $fmt ]]; then
+        echo "uade123 --repeat"
+    else
+        fatalError "Format $fmt is not supported"
+    fi
 }
 
 # Random select a song of the given format
@@ -156,14 +153,14 @@ mkdir $CMP_CONFIG_PATH &> /dev/null
 
 # Copy m1 xml file to current directory, otherwise m1 doesn't work, I
 # don't know why.
-cp $M1_XML_PATH .
-cp $M1_INI_PATH .
+cp $M1_XML_PATH . &> /dev/null
+cp $M1_INI_PATH . &> /dev/null
 
 # First time or user update
 if [[ -z $(get_existing_fmts) || "$1" == update ]]; then
     shift
     if [[ $# == 0 ]]; then
-        update ${SUPPORTED_FMTS[@]}
+        update ${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]}
     else
         update $@
     fi
