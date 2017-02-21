@@ -49,9 +49,9 @@ M1_INI_PATH="$M1_PATH/m1.ini"
 CMP_CONFIG_PATH=~/.chiptune-meta-player
 
 # List of suported formats
-M1_FMTS=() #m1)
+M1_FMTS=(m1)
 SIDPLAY2_FMTS=() #sid) need to fix shit for sidmon that is also called sid
-XMP_FMTS=(mod)
+XMP_FMTS=(mod xm it stm s3m mtm imf ptm ult liq psm amf gdm rtm mgt far 669 fnk ntp)
 UADE_FMTS=(amc ast amm aon ahx bss cm dz dl dw cus dm dp digi dmu ems tf fred gray smod gmc hip hip7 hipc ims is is20 jmf jam kh lme mc mso md ma mmd0 mmd1 mmd2 mmd3 mmdc okta dat ps snk pvp pap pt puma emod riff rh dum rho scumm scn scr mok sc psf sfx st26 jd sas ss sb sun syn synmod thm sg wb ymst)
 
 #############
