@@ -4,6 +4,14 @@
 # of loops is provided by the first argument, and the other arguments
 # are directly passed to chiptune-meta-player.sh
 
+############
+# Contants #
+############
+
+# Program path
+PRG_PATH="$(readlink -f "$0")"
+PRG_DIR="$(dirname "$PRG_PATH")"
+
 #############
 # Functions #
 #############
@@ -26,5 +34,5 @@ LOOP="$1"
 shift
 for i in $(seq 1 "$LOOP"); do
     infoEcho "Play $i/$LOOP"
-    ./chiptune-meta-player.sh $@
+    "$PRG_DIR/chiptune-meta-player.sh" $@
 done
