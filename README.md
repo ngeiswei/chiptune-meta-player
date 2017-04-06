@@ -16,6 +16,11 @@ using this program for the intended purpose. ;-)
 2. xmp, for playing MOD and such 
 3. m1, for playing MAME rips
 4. sc68, for playing sc68. Download and compile sc68-2.2.1
+5. uade, http://zakalwe.fi/uade/ you only need to compile uade123
+```
+./configure
+make -j5 uade123 && sudo make install
+```
 
 ## Usage
 
