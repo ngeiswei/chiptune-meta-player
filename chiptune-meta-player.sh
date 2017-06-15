@@ -58,7 +58,8 @@ SIDPLAY2_FMTS=() #sid) need to fix shit for sidmon that is also called sid
 XMP_FMTS=(mod xm it stm s3m mtm imf ptm ult liq psm amf gdm rtm mgt far 669 fnk ntp)
 UADE_FMTS=(amc ast amm aon ahx bss cm dz dl dw cus dm dp digi dmu ems tf fred smod gmc hip hip7 hipc ims is is20 jmf jam kh lme mc mso md ma mmd0 mmd1 mmd2 mmd3 mmdc okta dat ps snk pvp pap pt puma emod riff rh dum rho scumm scn scr mok sc psf sfx st26 jd sas ss sb sun syn synmod thm sg wb ymst) #gray) conflict with ay
 SC68_FMTS=(sc68 sndh)
-AYLET_FMTS=(ay)
+AYLET_FMTS=() #ay)
+AUDACIOUS_FMTS=(ay gbs gym hes nsf nsfe sap spc vgm vgz)
 
 #############
 # Functions #
@@ -136,6 +137,8 @@ fmt2cmd() {
         echo "$PRG_DIR/sc68.sh"
     elif [[ -n ${AYLET_FMTS[@]} && ${AYLET_FMTS[@]} =~ $fmt ]]; then
         echo "aylet -A 0"
+    elif [[ -n ${AUDACIOUS_FMTS[@]} && ${AUDACIOUS_FMTS[@]} =~ $fmt ]]; then
+        echo "audacious -H"
     else
         fatalError "Format $fmt is not supported"
     fi
@@ -170,7 +173,7 @@ cp $M1_INI_PATH . &> /dev/null
 if [[ -z $(get_existing_fmts) || "$1" == update ]]; then
     shift
     if [[ $# == 0 ]]; then
-        update ${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]} ${AYLET_FMTS[@]}
+        update ${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]} ${AYLET_FMTS[@]} ${AUDACIOUS_FMTS[@]}
     else
         update $@
     fi
