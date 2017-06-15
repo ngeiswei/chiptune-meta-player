@@ -103,8 +103,9 @@ update_fmt() {
     fi
 }
 
+# Get the list of all non empty format files
 get_existing_fmts() {
-    local res=($(find "$CMP_CONFIG_PATH" -name "*" -exec basename {} \;))
+    local res=($(find "$CMP_CONFIG_PATH" -name "*" ! -size 0 -exec basename {} \;))
     unset res[0]
     echo ${res[@]}
 }
@@ -120,6 +121,12 @@ select_fmt() {
     fi
     local fmt_index=$((RANDOM % ${#fmts[@]}))
     echo ${fmts[$fmt_index]}
+}
+
+# Return the number of songs of a given format
+nsongs() {
+    local fmt="$1"
+    wc -l "$CMP_CONFIG_PATH/$fmt" | cut -f1 -d' '
 }
 
 # Return command line to play the given format
@@ -182,7 +189,7 @@ fi
 
 # Pick up the chiptune format
 fmt="$(select_fmt $@)"
-infoEcho "Select $fmt format"
+infoEcho "Select $fmt format ($(nsongs $fmt) songs)"
 
 # Pick up the song to play
 song="$(select_song "$fmt")"
