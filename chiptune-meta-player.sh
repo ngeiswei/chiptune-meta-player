@@ -4,7 +4,7 @@
 
 # Usage
 #
-# chiptune-meta-player.sh [update] [FMT-1] ... [FMT-n]
+# chiptune-meta-player.sh [update|list] [FMT-1] ... [FMT-n]
 #
 # where FMT-1 to FMT-n are the chiptune formats you would like to
 # play, or update if the optional update command is used. If no format
@@ -28,7 +28,11 @@
 # that chiptune in loop.
 #
 # Supported formats are sid, mod, sc68, m1 for MAME, and countless
-# others. See the variables with suffix FMTS for the full list.
+# others. Type
+#
+# chiptune-meta-player.sh list
+#
+# to list them all.
 
 # set -x
 
@@ -164,6 +168,24 @@ select_song() {
     esac
 }
 
+# List all supported formats
+list_fmts() {
+    echo "m1:"
+    for fmt in ${M1_FMTS[@]}; do echo -e "\t$fmt"; done
+    echo "sidplay2:"
+    for fmt in ${SIDPLAY2_FMTS[@]}; do echo -e "\t$fmt"; done
+    echo "xmp:"
+    for fmt in ${XMP_FMTS[@]}; do echo -e "\t$fmt"; done
+    echo "uade:"
+    for fmt in ${UADE_FMTS[@]}; do echo -e "\t$fmt"; done
+    echo "sc68:"
+    for fmt in ${SC68_FMTS[@]}; do echo -e "\t$fmt"; done
+    echo "aylet:"
+    for fmt in ${AYLET_FMTS[@]}; do echo -e "\t$fmt"; done
+    echo "audacious:"
+    for fmt in ${AUDACIOUS_FMTS[@]}; do echo -e "\t$fmt"; done
+}
+
 ########
 # Main #
 ########
@@ -184,6 +206,12 @@ if [[ -z $(get_existing_fmts) || "$1" == update ]]; then
     else
         update $@
     fi
+    exit 0
+fi
+
+# List all supported formats
+if [[ "$1" == list ]]; then
+    list_fmts
     exit 0
 fi
 
