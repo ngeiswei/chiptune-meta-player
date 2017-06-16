@@ -99,7 +99,7 @@ update_fmt() {
     if [[ "$fmt" == m1 ]]; then
         "$M1_PRG_PATH" -ll > $CMP_CONFIG_PATH/"$fmt"
     else
-        find $MUSIC_PATH -name "*.$fmt" > $CMP_CONFIG_PATH/"$fmt"
+        find -L $MUSIC_PATH -name "*.$fmt" > $CMP_CONFIG_PATH/"$fmt"
     fi
 }
 
