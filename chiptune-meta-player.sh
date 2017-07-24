@@ -120,7 +120,7 @@ get_existing_fmts() {
 # Randomly select the format for the song to play
 select_fmt() {
     if [[ $# > 0 ]]; then
-        local fmts=($@)
+        local fmts=("$@")
     else
         # If no format is specified choose between the existing known
         # ones
@@ -178,10 +178,18 @@ filter_songs() {
     fi
 }
 
+# Given the format return the filepath where the songs of that format
+# are stored.
+fmt_path() {
+    local fmt="$1"
+    local songs="$CMP_CONFIG_PATH/$fmt"
+    echo "$songs"
+}
+
 # Random select a song of the given format
 select_song() {
     local fmt="$1"
-    local songs="$CMP_CONFIG_PATH/$fmt"
+    local songs="$(fmt_path "$fmt")"
     shift
     local song="$(filter_songs "$songs" "$@" | shuf | head -n1)"
     case "$fmt" in
@@ -217,7 +225,7 @@ list_fmts() {
 is_in() {
     local el="$1"
     shift
-    for w in $@; do
+    for w in "$@"; do
         if [[ "$el" == "$w" ]]; then
             echo "T"
             return
@@ -230,7 +238,7 @@ is_in() {
 # Given a list of strings and formats only retain the formats
 filter_fmts() {
     local fmts=()
-    for el in $@; do
+    for el in "$@"; do
         if [[ $(is_in "$el" ${ALL_FMTS[@]}) == T ]]; then
             fmts+=("$el")
         fi
@@ -241,7 +249,7 @@ filter_fmts() {
 # Given a list of strings and format only retain the strings
 filter_strs() {
     local strs=()
-    for el in $@; do
+    for el in "$@"; do
         if [[ $(is_in "$el" ${ALL_FMTS[@]}) == F ]]; then
             strs+=("$el")
         fi
@@ -269,7 +277,7 @@ if [[ -z $(get_existing_fmts) || "$1" == update ]]; then
     if [[ $# == 0 ]]; then
         update ${ALL_FMTS[@]}
     else
-        update $(filter_fmts $@)
+        update $(filter_fmts "$@")
     fi
     exit 0
 fi
@@ -281,19 +289,19 @@ if [[ "$1" == list ]]; then
 fi
 
 # Pick up the chiptune format
-fmts=($(filter_fmts $@))
+fmts=($(filter_fmts "$@"))
 fmt="$(select_fmt ${fmts[@]})"
 infoEcho "Select $fmt format ($(nsongs $fmt) songs)"
 
 # Filter according to strings
-strs=($(filter_strs $@))
+strs=($(filter_strs "$@"))
 if [[ ${#strs[@]|} != 0 ]]; then
-    infoEcho "Filter according to strings:"
+    n_filtered=$(filter_songs "$(fmt_path "$fmt")" "${strs[@]}" | wc -l)
+    infoEcho "Filter according to strings: ($n_filtered songs)"
     for str in "${strs[@]}"; do
         echo -e "\t$str"
     done
 fi
-
 
 # Pick up the song to play
 song="$(select_song "$fmt" "${strs[@]}")"
