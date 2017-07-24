@@ -4,11 +4,14 @@
 
 # Usage
 #
-# chiptune-meta-player.sh [update|list] [FMT-1] ... [FMT-n]
+# chiptune-meta-player.sh [update|list] [FMT-1] ... [FMT-n] [STR-1] ... [STR-m]
 #
 # where FMT-1 to FMT-n are the chiptune formats you would like to
 # play, or update if the optional update command is used. If no format
-# are indicated then all supported formats are considered.
+# are indicated then all supported formats are considered. STR-1 to
+# STR-m are any strings that you want to appear in the filepaths or
+# filenames. Formats and strings can be given in any order, it will
+# automatically recognize what are formats and what are strings.
 #
 # How does it work?
 #
@@ -111,7 +114,7 @@ update_fmt() {
 get_existing_fmts() {
     local res=($(find "$CMP_CONFIG_PATH" -name "*" ! -size 0 -exec basename {} \;))
     unset res[0]
-    echo ${res[@]}
+    echo "${res[@]}"
 }
 
 # Randomly select the format for the song to play
@@ -124,7 +127,7 @@ select_fmt() {
         local fmts=($(get_existing_fmts))
     fi
     local fmt_index=$((RANDOM % ${#fmts[@]}))
-    echo ${fmts[$fmt_index]}
+    echo "${fmts[$fmt_index]}"
 }
 
 # Return the number of songs of a given format
@@ -134,6 +137,7 @@ nsongs() {
 }
 
 # Return command line to play the given format
+# TODO: replace regex match by is_in
 fmt2cmd() {
     local fmt="$1"
     if [[ -n ${M1_FMTS[@]} && ${M1_FMTS[@]} =~ $fmt ]]; then
@@ -155,16 +159,37 @@ fmt2cmd() {
     fi
 }
 
+# Given a file with song path, filter the songs containing the strings
+# given in subsequent arguments, if any.
+filter_songs() {
+    local songs="$1"
+    shift
+    local str="$1"
+    if [[ -n "$str" ]]; then
+        grep "$str" "$songs"
+        shift
+        local str="$1"
+        # Only do the recursive call if the next argument is not empty
+        if [[ -n "$str" ]]; then
+            filter_songs "$songs" "$@"
+        fi
+    else
+        cat "$songs"
+    fi
+}
+
 # Random select a song of the given format
 select_song() {
     local fmt="$1"
     local songs="$CMP_CONFIG_PATH/$fmt"
+    shift
+    local song="$(filter_songs "$songs" "$@" | shuf | head -n1)"
     case "$fmt" in
         "m1")
-            echo "$(shuf < "$songs" | head -n1 | cut -d: -f1)"
+            echo "$song" | cut -d: -f1
             ;;
         *)
-            echo "$(shuf < "$songs" | head -n1)"
+            echo "$song"
     esac
 }
 
@@ -186,6 +211,44 @@ list_fmts() {
     for fmt in ${AUDACIOUS_FMTS[@]}; do echo -e "\t$fmt"; done
 }
 
+# Given a list of strings, the first one representing an element, the
+# others representing a list of strings return T if the string belongs
+# to the list, F otherwise.
+is_in() {
+    local el="$1"
+    shift
+    for w in $@; do
+        if [[ "$el" == "$w" ]]; then
+            echo "T"
+            return
+        fi
+    done
+    echo "F"
+    return
+}
+
+# Given a list of strings and formats only retain the formats
+filter_fmts() {
+    local fmts=()
+    for el in $@; do
+        if [[ $(is_in "$el" ${ALL_FMTS[@]}) == T ]]; then
+            fmts+=("$el")
+        fi
+    done
+    echo "${fmts[@]}"
+}
+
+# Given a list of strings and format only retain the strings
+filter_strs() {
+    local strs=()
+    for el in $@; do
+        if [[ $(is_in "$el" ${ALL_FMTS[@]}) == F ]]; then
+            strs+=("$el")
+        fi
+    done
+    echo "${strs[@]}"
+}
+
 ########
 # Main #
 ########
@@ -198,13 +261,15 @@ mkdir $CMP_CONFIG_PATH &> /dev/null
 cp $M1_XML_PATH . &> /dev/null
 cp $M1_INI_PATH . &> /dev/null
 
+ALL_FMTS=(${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]} ${AYLET_FMTS[@]} ${AUDACIOUS_FMTS[@]})
+
 # First time or user update
 if [[ -z $(get_existing_fmts) || "$1" == update ]]; then
     shift
     if [[ $# == 0 ]]; then
-        update ${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]} ${AYLET_FMTS[@]} ${AUDACIOUS_FMTS[@]}
+        update ${ALL_FMTS[@]}
     else
-        update $@
+        update $(filter_fmts $@)
     fi
     exit 0
 fi
@@ -216,12 +281,28 @@ if [[ "$1" == list ]]; then
 fi
 
 # Pick up the chiptune format
-fmt="$(select_fmt $@)"
+fmts=($(filter_fmts $@))
+fmt="$(select_fmt ${fmts[@]})"
 infoEcho "Select $fmt format ($(nsongs $fmt) songs)"
 
+# Filter according to strings
+strs=($(filter_strs $@))
+if [[ ${#strs[@]|} != 0 ]]; then
+    infoEcho "Filter according to strings:"
+    for str in "${strs[@]}"; do
+        echo -e "\t$str"
+    done
+fi
+
+
 # Pick up the song to play
-song="$(select_song "$fmt")"
-infoEcho "Select $song"
+song="$(select_song "$fmt" "${strs[@]}")"
+if [[ -n "$song" ]]; then
+    infoEcho "Select $song"
+else
+    infoEcho "No selected song"
+    exit 1
+fi
 
 # Build the command line and play the song
 cmd="$(fmt2cmd "$fmt") \"$song\""
