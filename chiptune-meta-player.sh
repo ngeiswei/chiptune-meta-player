@@ -296,7 +296,7 @@ infoEcho "Select $fmt format ($(nsongs $fmt) songs)"
 
 # Filter according to strings
 strs=($(filter_strs "$@"))
-if [[ ${#strs[@]|} != 0 ]]; then
+if [[ ${#strs[@]} != 0 ]]; then
     n_filtered=$(filter_songs "$(fmt_path "$fmt")" "${strs[@]}" | wc -l)
     infoEcho "Filter according to strings: ($n_filtered songs)"
     for str in "${strs[@]}"; do
