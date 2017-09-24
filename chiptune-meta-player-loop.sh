@@ -34,5 +34,5 @@ LOOP="$1"
 shift
 for i in $(seq 1 "$LOOP"); do
     infoEcho "Play $i/$LOOP"
-    "$PRG_DIR/chiptune-meta-player.sh" $@
+    "$PRG_DIR/chiptune-meta-player.sh" "$@"
 done
