@@ -247,15 +247,15 @@ filter_fmts() {
     echo "${fmts[@]}"
 }
 
-# Given a list of strings and format only retain the strings
+# Given a list of strings and format only retain the strings and fill
+# global array variable strs
 filter_strs() {
-    local strs=()
+    strs=()
     for el in "$@"; do
         if [[ $(is_in "$el" ${ALL_FMTS[@]}) == F ]]; then
             strs+=("$el")
         fi
     done
-    echo "${strs[@]}"
 }
 
 ########
@@ -294,8 +294,8 @@ fmts=($(filter_fmts "$@"))
 fmt="$(select_fmt ${fmts[@]})"
 infoEcho "Select $fmt format ($(nsongs $fmt) songs)"
 
-# Filter according to strings
-strs=($(filter_strs "$@"))
+# Fill array variable strs with strings
+filter_strs "$@"
 if [[ ${#strs[@]} != 0 ]]; then
     n_filtered=$(filter_songs "$(fmt_path "$fmt")" "${strs[@]}" | wc -l)
     infoEcho "Filter according to strings: ($n_filtered songs)"
