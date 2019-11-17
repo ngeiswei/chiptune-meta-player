@@ -67,8 +67,9 @@ UADE_FMTS=(amc ast amm aon ahx bss cm dz dl dw cus dm dp digi dmu ems tf fred sm
 # psf conflict between SoundFactory and Playstation Sound Format
 SC68_FMTS=(sc68 sndh)
 AYLET_FMTS=() #ay)
-AUDACIOUS_FMTS=(ay gbs gym hes nsf nsfe sap spc vgm vgz psf)
+AUDACIOUS_FMTS=(ay gbs gym hes nsf nsfe sap spc psf)
 MIDI_FMTS=(mid)
+VGMPLAY_FMTS=(vgm vgz cmf dro)
 
 #############
 # Functions #
@@ -158,6 +159,8 @@ fmt2cmd() {
         echo "audacious -H"
     elif [[ -n ${MIDI_FMTS[@]} && ${MIDI_FMTS[@]} =~ $fmt ]]; then
         echo "timidity --l"
+    elif [[ -n ${VGMPLAY_FMTS[@]} && ${VGMPLAY_FMTS[@]} =~ $fmt ]]; then
+        echo "vgmplay"
     else
         fatalError "Format $fmt is not supported"
     fi
@@ -223,6 +226,8 @@ list_fmts() {
     for fmt in ${AUDACIOUS_FMTS[@]}; do echo -e "\t$fmt"; done
     echo "timidity:"
     for fmt in ${MIDI_FMTS[@]}; do echo -e "\t$fmt"; done
+    echo "vgmplay:"
+    for fmt in ${VGMPLAY_FMTS[@]}; do echo -e "\t$fmt"; done
 }
 
 # Given a list of strings, the first one representing an element, the
