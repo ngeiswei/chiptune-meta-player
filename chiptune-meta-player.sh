@@ -280,7 +280,7 @@ mkdir $CMP_CONFIG_PATH &> /dev/null
 cp $M1_XML_PATH . &> /dev/null
 cp $M1_INI_PATH . &> /dev/null
 
-ALL_FMTS=(${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]} ${AYLET_FMTS[@]} ${AUDACIOUS_FMTS[@]} ${MIDI_FMTS[@]})
+ALL_FMTS=(${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]} ${AYLET_FMTS[@]} ${AUDACIOUS_FMTS[@]} ${MIDI_FMTS[@]} ${VGMPLAY_FMTS[@]})
 
 # First time or user update
 if [[ -z $(get_existing_fmts) || "$1" == update ]]; then

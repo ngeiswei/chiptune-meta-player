@@ -174,6 +174,8 @@ files
 - tf
 - thm
 - ult
+- vgm
+- vgz
 - wb
 - xm
 - ymst
