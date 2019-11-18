@@ -91,6 +91,7 @@ files
 - ay
 - bss
 - cm
+- cmf
 - cus
 - dat
 - digi
@@ -98,6 +99,7 @@ files
 - dm
 - dmu
 - dp
+- dro
 - dum
 - dw
 - dz
