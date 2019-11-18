@@ -63,13 +63,26 @@ CMP_CONFIG_PATH=~/.chiptune-meta-player
 M1_FMTS=() #m1)
 SIDPLAY2_FMTS=(psid) # ideally should support sid as well, although this conflict with SidMon 1
 XMP_FMTS=(mod xm it stm s3m mtm imf ptm ult liq psm amf gdm rtm mgt far 669 fnk ntp)
-UADE_FMTS=(amc ast amm aon ahx bss cm dz dl dw cus dm dp digi dmu ems tf fred smod gmc hip hip7 hipc ims is is20 jmf jam kh lme mc mso md ma mmd0 mmd1 mmd2 mmd3 mmdc okta dat ps snk pvp pap pt puma emod riff rh dum rho scumm scn scr mok sc sfx st26 jd sas ss sb sun syn synmod thm sg wb ymst) #gray) conflict with ay
-# psf conflict between SoundFactory and Playstation Sound Format
+UADE_FMTS=(amc amm aon ahx cm dz dl dw cus dm dp digi dmu ems tf fred smod gmc hip hip7 hipc is is20 jmf jam kh lme mc mso md ma mmd0 mmd1 mmd2 mmd3 mmdc okta dat ps snk pvp pap pt puma emod riff rh dum rho scumm scn scr mok sc sfx st26 jd sas sb sun syn synmod thm sg wb ymst) 
 SC68_FMTS=(sc68 sndh)
-AYLET_FMTS=() #ay)
-AUDACIOUS_FMTS=(ay gbs gym hes nsf nsfe sap spc psf)
+AYLET_FMTS=() #ay) now supported by audacious
+AUDACIOUS_FMTS=(ay gbs hes nsf nsfe sap spc psf)
 MIDI_FMTS=(mid)
 VGMPLAY_FMTS=(vgm vgz cmf dro)
+
+# The following formats are in conflicts or do not work:
+#
+# gray is in conflict with ay
+#
+# ims, ss do not work
+#
+# bss is in conflict with ss
+#
+# ast is in conflict between Actionamics and All Sound Tracker
+#
+# psf conflict between SoundFactory and Playstation Sound Format
+#
+# gyn supposed to be supported by audacious but doesn't work
 
 #############
 # Functions #
