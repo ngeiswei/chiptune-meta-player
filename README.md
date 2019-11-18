@@ -22,15 +22,7 @@ using this program for the intended purpose. ;-)
 make -j5 uade123 && sudo make install
 ```
 6. timidity, http://timidity.sourceforge.net/
-7. vgmplay, https://github.com/vgmrips/vgmplay. Also to loop create a config folder
-```
-mkdir ~/.config/vgmplay/
-```
-copy the default init file there
-```
-cp /usr/local/share/vgmplay/vgmplay.ini ~/.config/vgmplay
-```
-and assign `MaxLoops` and `MaxLoopsCMF` to `0xff`.
+7. vgmplay, https://github.com/vgmrips/vgmplay/
 
 ## Usage
 

@@ -160,7 +160,7 @@ fmt2cmd() {
     elif [[ -n ${MIDI_FMTS[@]} && ${MIDI_FMTS[@]} =~ $fmt ]]; then
         echo "timidity --l"
     elif [[ -n ${VGMPLAY_FMTS[@]} && ${VGMPLAY_FMTS[@]} =~ $fmt ]]; then
-        echo "vgmplay"
+        echo "$PRG_DIR/vgmplay.sh"
     else
         fatalError "Format $fmt is not supported"
     fi
