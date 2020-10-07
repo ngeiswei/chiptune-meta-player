@@ -24,6 +24,12 @@ make -j5 uade123 && sudo make install
 6. timidity, http://timidity.sourceforge.net/
 7. vgmplay, https://github.com/vgmrips/vgmplay/
 
+## Installation
+
+```
+sudo ./install.sh
+```
+
 ## Usage
 
 The first time chiptune-meta-player.sh is run it will create a
@@ -32,7 +38,7 @@ second time you may run it with one or more formats in arguments. For
 instance
 
 ```bash
-./chiptune-meta-player.sh ahx sc68
+chiptune-meta-player.sh ahx sc68
 ```
 
 will randomly select a song from the database with format ahx or sc68
@@ -43,7 +49,7 @@ If you want to play a sequence of songs you may wrap this program in a
 loop
 
 ```bash
-for i in {1..20}; do ./chiptune-meta-player.sh ahx sc68; done
+for i in {1..20}; do chiptune-meta-player.sh ahx sc68; done
 ```
 
 or use `chiptune-meta-player-loop.sh` which does that for you. In that
@@ -53,7 +59,7 @@ and the following arguments are directly passed to
 the for loop above
 
 ```bash
-./chiptune-meta-player-loop.sh 20 ahx sc68
+chiptune-meta-player-loop.sh 20 ahx sc68
 ```
 
 If some files have changed on your disk and you wish to update again
@@ -173,6 +179,24 @@ files
 - wb
 - xm
 - ymst
+
+## Archives
+
+Here's a list of chiptune archives.  Let me know if you know more
+
+https://www.exotica.org.uk/wiki/Modland
+http://tracker.modarchive.org/
+https://www.amigamusiccollection.com/
+http://chiptune.com/
+http://snesmusic.org/
+https://hvsc.c64.org/
+http://asma.atari.org/
+https://bulba.untergrund.net/music_e.htm
+http://amigascne.org/abyss/ahx/tunes.html
+http://sc68.atari.org/musics.html
+https://worldofspectrum.org/projectay/gdmusic.htm
+http://sndh.atari.org/
+https://web.archive.org/web/20140208203114/http://chiptunes.back2roots.org/
 
 ## Author
 
