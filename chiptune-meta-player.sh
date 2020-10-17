@@ -66,7 +66,8 @@ XMP_FMTS=(mod xm it stm s3m mtm imf ptm ult liq psm amf gdm rtm mgt far 669 fnk 
 UADE_FMTS=(amc amm aon ahx cm dz dl dw cus dm dp digi dmu ems tf fred smod gmc hip hip7 hipc is is20 jmf jam kh lme mc mso md ma mmd0 mmd1 mmd2 mmd3 mmdc okta dat ps snk pvp pap pt puma emod riff rh dum rho scumm scn scr mok sc sfx st26 jd sas sb sun syn synmod thm sg wb ymst) 
 SC68_FMTS=(sc68 sndh)
 AYLET_FMTS=() #ay) now supported by audacious
-AUDACIOUS_FMTS=(ay gbs hes nsf nsfe sap spc psf)
+AUDACIOUS_FMTS=(ay gbs hes nsf nsfe spc psf)
+ASAP_FMTS=(sap cmc cm3 cmr cms dmc dlt mpt mpd rmt tmc tm8 tm2 fc)
 MIDI_FMTS=(mid)
 VGMPLAY_FMTS=(vgm vgz cmf dro)
 
@@ -163,13 +164,15 @@ fmt2cmd() {
     elif [[ -n ${XMP_FMTS[@]} && ${XMP_FMTS[@]} =~ $fmt ]]; then
         echo "xmp -l"
     elif [[ -n ${UADE_FMTS[@]} && ${UADE_FMTS[@]} =~ $fmt ]]; then
-        echo "uade123 --repeat"
+        echo "uade123.sh"
     elif [[ -n ${SC68_FMTS[@]} && ${SC68_FMTS[@]} =~ $fmt ]]; then
         echo "$PRG_DIR/sc68.sh"
     elif [[ -n ${AYLET_FMTS[@]} && ${AYLET_FMTS[@]} =~ $fmt ]]; then
         echo "aylet -A 0"
     elif [[ -n ${AUDACIOUS_FMTS[@]} && ${AUDACIOUS_FMTS[@]} =~ $fmt ]]; then
         echo "audacious -H"
+    elif [[ -n ${ASAP_FMTS[@]} && ${ASAP_FMTS[@]} =~ $fmt ]]; then
+        echo "asap.sh"
     elif [[ -n ${MIDI_FMTS[@]} && ${MIDI_FMTS[@]} =~ $fmt ]]; then
         echo "timidity --l"
     elif [[ -n ${VGMPLAY_FMTS[@]} && ${VGMPLAY_FMTS[@]} =~ $fmt ]]; then
@@ -237,6 +240,8 @@ list_fmts() {
     for fmt in ${AYLET_FMTS[@]}; do echo -e "\t$fmt"; done
     echo "audacious:"
     for fmt in ${AUDACIOUS_FMTS[@]}; do echo -e "\t$fmt"; done
+    echo "asap:"
+    for fmt in ${ASAP_FMTS[@]}; do echo -e "\t$fmt"; done
     echo "timidity:"
     for fmt in ${MIDI_FMTS[@]}; do echo -e "\t$fmt"; done
     echo "vgmplay:"
@@ -293,7 +298,7 @@ mkdir $CMP_CONFIG_PATH &> /dev/null
 cp $M1_XML_PATH . &> /dev/null
 cp $M1_INI_PATH . &> /dev/null
 
-ALL_FMTS=(${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]} ${AYLET_FMTS[@]} ${AUDACIOUS_FMTS[@]} ${MIDI_FMTS[@]} ${VGMPLAY_FMTS[@]})
+ALL_FMTS=(${M1_FMTS[@]} ${SIDPLAY2_FMTS[@]} ${XMP_FMTS[@]} ${UADE_FMTS[@]} ${SC68_FMTS[@]} ${AYLET_FMTS[@]} ${AUDACIOUS_FMTS[@]} ${ASAP_FMTS[@]} ${MIDI_FMTS[@]} ${VGMPLAY_FMTS[@]})
 
 # First time or user update
 if [[ -z $(get_existing_fmts) || "$1" == update ]]; then

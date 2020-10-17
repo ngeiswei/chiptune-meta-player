@@ -89,12 +89,18 @@ files
 - ay
 - bss
 - cm
+- cm3
+- cmc
 - cmf
+- cmr
+- cms
 - cus
 - dat
 - digi
 - dl
+- dlt
 - dm
+- dmc
 - dmu
 - dp
 - dro
@@ -104,6 +110,7 @@ files
 - emod
 - ems
 - far
+- fc
 - fnk
 - fred
 - gdm
@@ -135,6 +142,8 @@ files
 - mmdc
 - mod
 - mok
+- mpd
+- mpt
 - mso
 - mtm
 - ntp
@@ -142,6 +151,7 @@ files
 - pap
 - ps
 - psf
+- psid
 - psm
 - pt
 - ptm
@@ -150,8 +160,10 @@ files
 - rh
 - rho
 - riff
+- rmt
 - rtm
 - s3m
+- sap
 - sas
 - sb
 - sc
@@ -173,6 +185,9 @@ files
 - synmod
 - tf
 - thm
+- tm2
+- tm8
+- tmc
 - ult
 - vgm
 - vgz
