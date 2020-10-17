@@ -23,6 +23,7 @@ make -j5 uade123 && sudo make install
 ```
 6. timidity, http://timidity.sourceforge.net/
 7. vgmplay, https://github.com/vgmrips/vgmplay/
+8. asap, for playing SAP and such
 
 ## Installation
 
