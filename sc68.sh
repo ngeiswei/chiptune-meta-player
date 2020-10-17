@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 # Wrapper around sc68 to play all tracks and repeat
 
 # Query the number of tracks
