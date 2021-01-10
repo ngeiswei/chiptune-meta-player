@@ -61,23 +61,19 @@ CMP_CONFIG_PATH=~/.chiptune-meta-player
 
 # List of suported formats
 M1_FMTS=() #m1)
-SIDPLAY2_FMTS=(psid) # ideally should support sid as well, although this conflict with SidMon 1
-XMP_FMTS=(mod xm it stm s3m mtm imf ptm ult liq psm amf gdm rtm mgt far 669 fnk ntp)
-UADE_FMTS=(amc amm aon ahx cm dz dl dw cus dm dp digi dmu ems tf fred smod gmc hip hip7 hipc is is20 jmf jam kh lme mc mso md ma mmd0 mmd1 mmd2 mmd3 mmdc okta dat ps snk pvp pap pt puma emod riff rh dum rho scumm scn scr mok sc sfx st26 jd sas sb sun syn synmod thm sg wb ymst) 
+SIDPLAY2_FMTS=() #psid) #now supported by audacious # ideally should support sid as well, although this conflict with SidMon 1
+XMP_FMTS=(669 amf far fnk gdm imf it liq mgt mod mtm ntp psm ptm rtm s3m stm ult xm)
+UADE_FMTS=(ahx amc amm aon cm cus dat digi dl dm dmu dp dum dw dz emod ems fc fred gmc gray hip hip7 hipc is is20 jam jd jmf kh lme ma mc md mmd0 mmd1 mmd2 mmd3 mmdc mok mso okta pap ps pt puma pvp rh rho riff sas sb sc scn scr scumm sfx sg smod snk st26 sun syn synmod tf thm wb ymst bss) 
 SC68_FMTS=(sc68 sndh)
 AYLET_FMTS=() #ay) now supported by audacious
-AUDACIOUS_FMTS=(ay gbs hes nsf nsfe spc psf)
-ASAP_FMTS=(sap cmc cm3 cmr cms dmc dlt mpt mpd rmt tmc tm8 tm2 fc)
+AUDACIOUS_FMTS=(ay gbs hes nsf nsfe psf psid spc vgz)
+ASAP_FMTS=(cm3 cmc cmr cms dlt dmc mpd mpt rmt sap tm2 tm8 tmc)
 MIDI_FMTS=(mid)
-VGMPLAY_FMTS=(vgm vgz cmf dro)
+VGMPLAY_FMTS=(cmf dro vgm) #vgz) now supported by audacious
 
 # The following formats are in conflicts or do not work:
 #
-# gray is in conflict with ay
-#
 # ims, ss do not work
-#
-# bss is in conflict with ss
 #
 # ast is in conflict between Actionamics and All Sound Tracker
 #
@@ -154,28 +150,27 @@ nsongs() {
 }
 
 # Return command line to play the given format
-# TODO: replace regex match by is_in
 fmt2cmd() {
     local fmt="$1"
-    if [[ -n ${M1_FMTS[@]} && ${M1_FMTS[@]} =~ $fmt ]]; then
+    if [[ $(is_in "$fmt" ${M1_FMTS[@]}) == T ]]; then
         echo "\"$M1_PRG_PATH\" -m0 -n -v5"
-    elif [[ -n ${SIDPLAY2_FMTS[@]} && ${SIDPLAY2_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${SIDPLAY2_FMTS[@]}) == T ]]; then
         echo "sidplay2"
-    elif [[ -n ${XMP_FMTS[@]} && ${XMP_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${XMP_FMTS[@]}) == T ]]; then
         echo "xmp -l"
-    elif [[ -n ${UADE_FMTS[@]} && ${UADE_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${UADE_FMTS[@]}) == T ]]; then
         echo "uade123.sh"
-    elif [[ -n ${SC68_FMTS[@]} && ${SC68_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${SC68_FMTS[@]}) == T ]]; then
         echo "$PRG_DIR/sc68.sh"
-    elif [[ -n ${AYLET_FMTS[@]} && ${AYLET_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${AYLET_FMTS[@]}) == T ]]; then
         echo "aylet -A 0"
-    elif [[ -n ${AUDACIOUS_FMTS[@]} && ${AUDACIOUS_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${AUDACIOUS_FMTS[@]}) == T ]]; then
         echo "audacious -H"
-    elif [[ -n ${ASAP_FMTS[@]} && ${ASAP_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${ASAP_FMTS[@]}) == T ]]; then
         echo "asap.sh"
-    elif [[ -n ${MIDI_FMTS[@]} && ${MIDI_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${MIDI_FMTS[@]}) == T ]]; then
         echo "timidity --l"
-    elif [[ -n ${VGMPLAY_FMTS[@]} && ${VGMPLAY_FMTS[@]} =~ $fmt ]]; then
+    elif [[ $(is_in "$fmt" ${VGMPLAY_FMTS[@]}) == T ]]; then
         echo "$PRG_DIR/vgmplay.sh"
     else
         fatalError "Format $fmt is not supported"
