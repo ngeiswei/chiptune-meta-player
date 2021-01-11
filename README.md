@@ -74,7 +74,7 @@ you may run
 ./chiptune-meta-player.sh update
 ```
 
-If you wish to update only some formats, append then after `update`.
+If you wish to update only some formats, append them after `update`.
 For instance the following will only update `mod` and `it` files
 
 ```bash
