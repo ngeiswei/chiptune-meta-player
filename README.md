@@ -12,8 +12,8 @@ using this program for the intended purpose. ;-)
 
 ## Requirements
 
-1. sidplay2, for playing SID
-2. xmp, for playing MOD and such 
+1. sidplay2, for playing SID (may require osspd and osspd-pulseaudio)
+2. xmp, for playing MOD and such
 3. m1, for playing MAME rips
 4. sc68, for playing sc68.  Download and compile sc68-2.2.1
 5. uade, http://zakalwe.fi/uade/ you only need to compile uade123

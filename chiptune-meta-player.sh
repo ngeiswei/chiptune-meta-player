@@ -61,12 +61,12 @@ CMP_CONFIG_PATH=~/.chiptune-meta-player
 
 # List of suported formats
 M1_FMTS=() #m1)
-SIDPLAY2_FMTS=() #psid) #now supported by audacious # ideally should support sid as well, although this conflict with SidMon 1
+SIDPLAY2_FMTS=(psid) # also supported by audacious # ideally should support sid as well, although this conflict with SidMon 1
 XMP_FMTS=(669 amf far fnk gdm imf it liq mgt mod mtm ntp psm ptm rtm s3m stm ult xm)
-UADE_FMTS=(ahx amc amm aon cm cus dat digi dl dm dmu dp dum dw dz emod ems fc fred gmc gray hip hip7 hipc is is20 jam jd jmf kh lme ma mc md mmd0 mmd1 mmd2 mmd3 mmdc mok mso okta pap ps pt puma pvp rh rho riff sas sb sc scn scr scumm sfx sg smod snk st26 sun syn synmod tf thm wb ymst bss) 
+UADE_FMTS=(ahx amc amm aon cm cus dat digi dl dm dmu dp dum dw dz emod ems fc fred gmc gray hip hip7 hipc is is20 jam jd jmf kh lme ma mc md mmd0 mmd1 mmd2 mmd3 mmdc mok mso okta pap ps pt puma pvp rh rho riff sas sb sc scn scr scumm sfx sg smod snk st26 sun syn synmod tf thm wb ymst bss)
 SC68_FMTS=(sc68 sndh)
 AYLET_FMTS=() #ay) now supported by audacious
-AUDACIOUS_FMTS=(ay gbs hes nsf nsfe psf psid spc vgz)
+AUDACIOUS_FMTS=(ay gbs hes nsf nsfe psf spc vgz)
 ASAP_FMTS=(cm3 cmc cmr cms dlt dmc mpd mpt rmt sap tm2 tm8 tmc)
 MIDI_FMTS=(mid)
 VGMPLAY_FMTS=(cmf dro vgm) #vgz) now supported by audacious
